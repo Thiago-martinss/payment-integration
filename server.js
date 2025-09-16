@@ -4,6 +4,8 @@ const cors = require('cors');
 const path = require('path');
 const methodOverride = require('method-override');
 const expressLayouts = require('express-ejs-layouts');
+const { productRouter } = require("./routes/productRoutes");
+
 
 const app = express();
 //Load env vars
@@ -16,6 +18,9 @@ dotenv.config();
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 app.set('layout', 'layouts/main');
+
+//Mount web frontend routers
+app.use("/products", productRouter);
 
 //Home route
 app.get('/', (req, res) => {
