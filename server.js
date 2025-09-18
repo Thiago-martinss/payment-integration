@@ -19,6 +19,9 @@ app.use(expressLayouts);
 app.set('view engine', 'ejs');
 app.set('layout', 'layouts/main');
 
+//Mount API routes
+app.use("/api/products", apiRouter)
+
 //Mount web frontend routers
 app.use("/products", productRouter);
 
