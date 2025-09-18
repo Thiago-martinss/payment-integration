@@ -1,5 +1,6 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-
+const Customer = require("../models/Customer");
+const Payment = require("../models/Payment");
 const Product = require("../models/Product");
 
 // @desc    Show checkout page for a product
