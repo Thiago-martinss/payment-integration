@@ -3,7 +3,7 @@ const {
   showCheckout,
   processCheckout,
   paymentSuccess,
-
+  showAllPayments,
 } = require("../controllers/paymentController");
 const paymentRouter = express.Router();
 
@@ -11,6 +11,7 @@ const paymentRouter = express.Router();
 
 paymentRouter.post("/checkout/:productId", processCheckout);
 paymentRouter.get("/success", paymentSuccess);
+paymentRouter.get("/payments", showAllPayments);
 paymentRouter.get("/checkout/:productId", showCheckout);
 
 module.exports = { paymentRouter };

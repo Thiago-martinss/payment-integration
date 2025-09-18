@@ -84,3 +84,18 @@ exports.processCheckout = async (req, res) => {
 exports.paymentSuccess = (req, res) => {
   res.render("success");
 };
+
+exports.showAllPayments = async (req, res) => {
+  try {
+    const payments = await Payment.find()
+      .populate("customer", "name email")
+      .sort("-createdAt");
+    res.render("payments/index", {
+      payments,
+    });
+  } catch (error) {
+    res.status(500).render("error", {
+      message: "Error Processing Checkout",
+    });
+  }
+};
