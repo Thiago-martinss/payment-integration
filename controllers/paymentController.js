@@ -20,3 +20,63 @@ exports.showCheckout = async (req, res) => {
   }
 };
 
+exports.processCheckout = async (req, res) => {
+  try {
+    const { name, email } = req.body;
+    const productId = req.params.productId;
+    //Find or create customer
+    let customer = await Customer.findOne({ email });
+    if (!customer) {
+      //Create a customer in stripe
+      const stripeCustomer = await stripe.customers.create({
+        name,
+        email,
+      });
+      //Create customer in database
+      customer = await Customer.create({
+        name,
+        email,
+        stripeCustomerId: stripeCustomer.id,
+      });
+    }
+    //Find product
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).render("error", {
+        message: "Product Not Found",
+      });
+    }
+    //Create payment intent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(product.price * 200), //Stripe expects amount in cents
+      currency: "usd",
+      customer: customer.stripeCustomerId,
+      description: `Payment for ${product.name}`,
+      metadata: {
+        customerId: customer._id.toString(),
+        productId: product._id.toString(),
+      },
+    });
+    //Create payment record in database
+    const payment = await Payment.create({
+      customer: customer._id,
+      stripePaymentIntentId: paymentIntent.id,
+      amount: product.price,
+      currency: "usd",
+      description: `Payment for  ${product.name}`,
+      status: "succeeded",
+    });
+    //Render the payment page
+    res.render("payment", {
+      title: "Complete Payment",
+      product,
+      clientSecret: paymentIntent.client_secret,
+      customer,
+      stripePublicKey: process.env.STRIPE_PUBLIC_KEY,
+    });
+  } catch (error) {
+    res.status(500).render("error", {
+      message: "Error Processing Checkout",
+    });
+  }
+};
