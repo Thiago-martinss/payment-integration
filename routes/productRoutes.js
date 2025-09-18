@@ -1,14 +1,16 @@
-const express = require('express');
+const express = require("express");
 const {
   showCreateForm,
   createProduct,
-} = require('../controllers/productController');
+  getProducts,
+  getProduct,
+} = require("../controllers/productController");
 const productRouter = express.Router();
-const apiRouter = express.Router();
-productRouter.post('/', createProduct);
-
 
 //Web frontend routes
-productRouter.get('/new', showCreateForm);
+productRouter.get("/new", showCreateForm);
+productRouter.post("/", createProduct);
+productRouter.get("/", getProducts);
+productRouter.get("/:id", getProduct);
 
 module.exports = { productRouter };

@@ -4,14 +4,15 @@ const cors = require('cors');
 const path = require('path');
 const methodOverride = require('method-override');
 const expressLayouts = require('express-ejs-layouts');
-const { productRouter } = require("./routes/productRoutes");
-
+const { productRouter, apiRouter } = require('./routes/productRoutes');
+const connectDB = require('./config/db');
+const { connect } = require('http2');
 
 const app = express();
 //Load env vars
 dotenv.config();
 //Connect to database
-//connectDB();
+connectDB();
 //Routes
 
 //View engine setup
@@ -20,10 +21,10 @@ app.set('view engine', 'ejs');
 app.set('layout', 'layouts/main');
 
 //Mount API routes
-app.use("/api/products", apiRouter)
+//app.use('/api/products', apiRouter);
 
 //Mount web frontend routers
-app.use("/products", productRouter);
+app.use('/products', productRouter);
 
 //Home route
 app.get('/', (req, res) => {
