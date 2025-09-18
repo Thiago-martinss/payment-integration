@@ -3,9 +3,6 @@ dotenv.config();
 const Product = require("../models/Product");
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-// @desc    Show form to create a product
-// @route   GET /api/products/new (frontend only)
-// @access  Public
 
 exports.showCreateForm = (req, res) => {
   res.render("products/create");
