@@ -80,3 +80,7 @@ exports.processCheckout = async (req, res) => {
     });
   }
 };
+
+exports.paymentSuccess = (req, res) => {
+  res.render("success");
+};
